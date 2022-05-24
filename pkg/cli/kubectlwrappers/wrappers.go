@@ -40,6 +40,7 @@ import (
 	"k8s.io/kubectl/pkg/util/templates"
 
 	"github.com/openshift/oc/pkg/cli/create"
+	"github.com/openshift/oc/pkg/cli/get"
 	cmdutil "github.com/openshift/oc/pkg/helpers/cmd"
 )
 
@@ -59,7 +60,11 @@ func adjustCmdExamples(cmd *cobra.Command, name string) {
 
 // NewCmdGet is a wrapper for the Kubernetes cli get command
 func NewCmdGet(f kcmdutil.Factory, streams genericclioptions.IOStreams) *cobra.Command {
-	return cmdutil.ReplaceCommandName("kubectl", "oc", templates.Normalize(kget.NewCmdGet("oc", f, streams)))
+	cmd := cmdutil.ReplaceCommandName("kubectl", "oc", templates.Normalize(kget.NewCmdGet("oc", f, streams)))
+
+	cmd.AddCommand(get.NewCmdMachines("get", f, streams))
+
+	return cmd
 }
 
 // NewCmdReplace is a wrapper for the Kubernetes cli replace command
